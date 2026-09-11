@@ -4,7 +4,6 @@ from torch import nn
 import torch.nn.functional as F
 from torch.optim import AdamW
 import numpy as np
-import time
 from torch.utils.data import TensorDataset, DataLoader
 import evaluation as ev
 
@@ -252,8 +251,7 @@ class flocatTrainer(nn.Module):
 
             self.centroid = mean_per_sample.mean(dim=0).to(self.device)   
             self.var = (var_per_sample.mean(dim=0) * self.config['coef_var']).to(self.device)
-
-        self.log_r = nn.Parameter(torch.tensor(0.0).to(self.device))
+        self.log_r = nn.Parameter(torch.tensor(0.2).to(self.device))
 
     @property
     def r_in(self):
@@ -412,7 +410,6 @@ class flocatTrainer(nn.Module):
 
         if self.config['lambda_love'] > 0:
             # <<<<<<<<<<<<<<<< seventh step : love with 1 step model inference >>>>>>>>>>>>>>>>>>
-
             if x_0.dim() == 2:
                 # (B, 768) -> value = 0
                 x_0_res   = x_0 - x_0_sentence
@@ -428,12 +425,13 @@ class flocatTrainer(nn.Module):
 
             dist_sq = torch.sum(
                 (phi_1 - self.centroid)**2, dim=1
-            )                                 
-            r_sq      = self.r_in ** 2
-            loss_love = r_sq + F.relu(dist_sq - r_sq).mean()
+            )          
 
+            r_sq      = self.r_in ** 2
+            loss_love = r_sq + F.relu(dist_sq - r_sq).mean()                   
             loss_total = loss_fm + \
                             self.config['lambda_love'] * loss_love
+
             return loss_total, loss_fm.item(), loss_love.item()
 
         loss_total = loss_fm
