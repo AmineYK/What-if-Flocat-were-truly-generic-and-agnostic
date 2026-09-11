@@ -1,0 +1,144 @@
+Job ID: 3226989
+Device : cuda
+Backbone : wide_resnet50_2, out_indices=(2, 3)
+
+=== Catégorie : bottle ===
+Train : 209 images | Test : 83 images
+Répartition test : {'broken_large': 20, 'broken_small': 22, 'contamination': 21, 'good': 20}
+Extraction train...
+  -> data/embeddings/wide_resnet50_2/bottle/train.pt  (209 images, 1024 patches/image, 1536 dims)
+Extraction test...
+  -> data/embeddings/wide_resnet50_2/bottle/test.pt  (83 images, 1024 patches/image, 1536 dims)
+
+=== Catégorie : cable ===
+Train : 224 images | Test : 150 images
+Répartition test : {'bent_wire': 13, 'cable_swap': 12, 'combined': 11, 'cut_inner_insulation': 14, 'cut_outer_insulation': 10, 'good': 58, 'missing_cable': 12, 'missing_wire': 10, 'poke_insulation': 10}
+Extraction train...
+  -> data/embeddings/wide_resnet50_2/cable/train.pt  (224 images, 1024 patches/image, 1536 dims)
+Extraction test...
+  -> data/embeddings/wide_resnet50_2/cable/test.pt  (150 images, 1024 patches/image, 1536 dims)
+
+=== Catégorie : capsule ===
+Train : 219 images | Test : 132 images
+Répartition test : {'crack': 23, 'faulty_imprint': 22, 'good': 23, 'poke': 21, 'scratch': 23, 'squeeze': 20}
+Extraction train...
+  -> data/embeddings/wide_resnet50_2/capsule/train.pt  (219 images, 1024 patches/image, 1536 dims)
+Extraction test...
+  -> data/embeddings/wide_resnet50_2/capsule/test.pt  (132 images, 1024 patches/image, 1536 dims)
+
+=== Catégorie : carpet ===
+Train : 280 images | Test : 117 images
+Répartition test : {'color': 19, 'cut': 17, 'good': 28, 'hole': 17, 'metal_contamination': 17, 'thread': 19}
+Extraction train...
+  -> data/embeddings/wide_resnet50_2/carpet/train.pt  (280 images, 1024 patches/image, 1536 dims)
+Extraction test...
+  -> data/embeddings/wide_resnet50_2/carpet/test.pt  (117 images, 1024 patches/image, 1536 dims)
+
+=== Catégorie : grid ===
+Train : 264 images | Test : 78 images
+Répartition test : {'bent': 12, 'broken': 12, 'glue': 11, 'good': 21, 'metal_contamination': 11, 'thread': 11}
+Extraction train...
+  -> data/embeddings/wide_resnet50_2/grid/train.pt  (264 images, 1024 patches/image, 1536 dims)
+Extraction test...
+  -> data/embeddings/wide_resnet50_2/grid/test.pt  (78 images, 1024 patches/image, 1536 dims)
+
+=== Catégorie : hazelnut ===
+Train : 391 images | Test : 110 images
+Répartition test : {'crack': 18, 'cut': 17, 'good': 40, 'hole': 18, 'print': 17}
+Extraction train...
+  -> data/embeddings/wide_resnet50_2/hazelnut/train.pt  (391 images, 1024 patches/image, 1536 dims)
+Extraction test...
+  -> data/embeddings/wide_resnet50_2/hazelnut/test.pt  (110 images, 1024 patches/image, 1536 dims)
+
+=== Catégorie : leather ===
+Train : 245 images | Test : 124 images
+Répartition test : {'color': 19, 'cut': 19, 'fold': 17, 'glue': 19, 'good': 32, 'poke': 18}
+Extraction train...
+  -> data/embeddings/wide_resnet50_2/leather/train.pt  (245 images, 1024 patches/image, 1536 dims)
+Extraction test...
+  -> data/embeddings/wide_resnet50_2/leather/test.pt  (124 images, 1024 patches/image, 1536 dims)
+
+=== Catégorie : metal_nut ===
+Train : 220 images | Test : 115 images
+Répartition test : {'bent': 25, 'color': 22, 'flip': 23, 'good': 22, 'scratch': 23}
+Extraction train...
+  -> data/embeddings/wide_resnet50_2/metal_nut/train.pt  (220 images, 1024 patches/image, 1536 dims)
+Extraction test...
+  -> data/embeddings/wide_resnet50_2/metal_nut/test.pt  (115 images, 1024 patches/image, 1536 dims)
+
+=== Catégorie : pill ===
+Train : 267 images | Test : 167 images
+Répartition test : {'color': 25, 'combined': 17, 'contamination': 21, 'crack': 26, 'faulty_imprint': 19, 'good': 26, 'pill_type': 9, 'scratch': 24}
+Extraction train...
+  -> data/embeddings/wide_resnet50_2/pill/train.pt  (267 images, 1024 patches/image, 1536 dims)
+Extraction test...
+  -> data/embeddings/wide_resnet50_2/pill/test.pt  (167 images, 1024 patches/image, 1536 dims)
+
+=== Catégorie : screw ===
+Train : 320 images | Test : 160 images
+Répartition test : {'good': 41, 'manipulated_front': 24, 'scratch_head': 24, 'scratch_neck': 25, 'thread_side': 23, 'thread_top': 23}
+Extraction train...
+  -> data/embeddings/wide_resnet50_2/screw/train.pt  (320 images, 1024 patches/image, 1536 dims)
+Extraction test...
+  -> data/embeddings/wide_resnet50_2/screw/test.pt  (160 images, 1024 patches/image, 1536 dims)
+
+=== Catégorie : tile ===
+Train : 230 images | Test : 117 images
+Répartition test : {'crack': 17, 'glue_strip': 18, 'good': 33, 'gray_stroke': 16, 'oil': 18, 'rough': 15}
+Extraction train...
+  -> data/embeddings/wide_resnet50_2/tile/train.pt  (230 images, 1024 patches/image, 1536 dims)
+Extraction test...
+  -> data/embeddings/wide_resnet50_2/tile/test.pt  (117 images, 1024 patches/image, 1536 dims)
+
+=== Catégorie : toothbrush ===
+Train : 60 images | Test : 42 images
+Répartition test : {'defective': 30, 'good': 12}
+Extraction train...
+  -> data/embeddings/wide_resnet50_2/toothbrush/train.pt  (60 images, 1024 patches/image, 1536 dims)
+Extraction test...
+  -> data/embeddings/wide_resnet50_2/toothbrush/test.pt  (42 images, 1024 patches/image, 1536 dims)
+
+=== Catégorie : transistor ===
+Train : 213 images | Test : 100 images
+Répartition test : {'bent_lead': 10, 'cut_lead': 10, 'damaged_case': 10, 'good': 60, 'misplaced': 10}
+Extraction train...
+  -> data/embeddings/wide_resnet50_2/transistor/train.pt  (213 images, 1024 patches/image, 1536 dims)
+Extraction test...
+  -> data/embeddings/wide_resnet50_2/transistor/test.pt  (100 images, 1024 patches/image, 1536 dims)
+
+=== Catégorie : wood ===
+Train : 247 images | Test : 79 images
+Répartition test : {'color': 8, 'combined': 11, 'good': 19, 'hole': 10, 'liquid': 10, 'scratch': 21}
+Extraction train...
+  -> data/embeddings/wide_resnet50_2/wood/train.pt  (247 images, 1024 patches/image, 1536 dims)
+Extraction test...
+  -> data/embeddings/wide_resnet50_2/wood/test.pt  (79 images, 1024 patches/image, 1536 dims)
+
+=== Catégorie : zipper ===
+Train : 240 images | Test : 151 images
+Répartition test : {'broken_teeth': 19, 'combined': 16, 'fabric_border': 17, 'fabric_interior': 16, 'good': 32, 'rough': 17, 'split_teeth': 18, 'squeezed_teeth': 16}
+Extraction train...
+  -> data/embeddings/wide_resnet50_2/zipper/train.pt  (240 images, 1024 patches/image, 1536 dims)
+Extraction test...
+  -> data/embeddings/wide_resnet50_2/zipper/test.pt  (151 images, 1024 patches/image, 1536 dims)
+
+Terminé.
+
+########################################
+   Comptabilité du calcul 3226989 
+########################################
+$ sacct --format='JobID,Partition,JobName,MaxRSS,MaxVMSize,NTasks,AllocCPUS,Start,End,Elapsed,AveCPU,MinCPU,NNodes,ExitCode,State' -j 3226989
+JobID           Partition  JobName        MaxRSS   MaxVMSize  NTasks  AllocCPUS  Start                End                  Elapsed   AveCPU  MinCPU  NNodes  ExitCode  State      
+-----           ---------  -------        -------  ---------  ------  ---------  -----                ---                  -------   ------  ------  ------  --------  -----      
+3226989         gpu        flocat-genagn                              16         2026-09-11T11:20:23  2026-09-11T11:23:03  00:02:40                  1       0:0       COMPLETED  
+3226989.batch              batch                              1       16         2026-09-11T11:20:23  2026-09-11T11:23:03  00:02:40                  1       0:0       COMPLETED  
+3226989.extern             extern                             1       16         2026-09-11T11:20:23  2026-09-11T11:23:03  00:02:40                  1       0:0       COMPLETED  
+
+$ sacct --format='JobID,JobName,AllocCPUS,ReqTRES,AllocTRES,NNodes,NodeList,Elapsed,CPUTime' -j 3226989
+JobID           JobName        AllocCPUS  ReqTRES                                      AllocTRES                                                       NNodes  NodeList  Elapsed   CPUTime   
+-----           -------        ---------  -------                                      ---------                                                       ------  --------  -------   -------   
+3226989         flocat-genagn  16         billing=1,cpu=1,gres/gpu=1,mem=3685M,node=1  billing=16,cpu=16,gres/gpu:a100=1,gres/gpu=1,mem=58960M,node=1  1       c23gpu2   00:02:40  00:42:40  
+3226989.batch   batch          16                                                      cpu=16,gres/gpu:a100=1,gres/gpu=1,mem=58960M,node=1             1       c23gpu2   00:02:40  00:42:40  
+3226989.extern  extern         16                                                      billing=16,cpu=16,gres/gpu:a100=1,gres/gpu=1,mem=58960M,node=1  1       c23gpu2   00:02:40  00:42:40  
+
+Pour plus d'informations sur la comptabilité du calcul, merci de consulter la documentation http://www-tech.criann.fr ou le manuel 'man sacct'
