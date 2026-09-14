@@ -1,0 +1,9 @@
+Job ID: 3229405
+
+Epoch 1/300
+Train Loss: 0.2610, LR: 0.000007
+tensor(1.2214, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 101/300
+Train Loss: 0.0342, LR: 0.000669
+tensor(1.2214, device='cuda:0', grad_fn=<ExpBackward0>)

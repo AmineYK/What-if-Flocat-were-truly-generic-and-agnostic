@@ -1,0 +1,180 @@
+========================================
+Dataset:        MVTecAD
+Inlier class:   bottle
+Embedding type: wide_resnet50_2
+AD model:       flocat-genagn
+Training time:  296.95 sec
+----------------------------------------
+AUC:            0.9960 ± 0.0000
+Avg Precision:  0.9988 ± 0.0000
+FPR@95:         0.0000 ± 0.0000
+========================================
+
+========================================
+Dataset:        MVTecAD
+Inlier class:   capsule
+Embedding type: wide_resnet50_2
+AD model:       flocat-genagn
+Training time:  300.53 sec
+----------------------------------------
+AUC:            0.9390 ± 0.0000
+Avg Precision:  0.9823 ± 0.0000
+FPR@95:         0.1739 ± 0.0000
+========================================
+
+========================================
+Dataset:        MVTecAD
+Inlier class:   cable
+Embedding type: wide_resnet50_2
+AD model:       flocat-genagn
+Training time:  315.59 sec
+----------------------------------------
+AUC:            0.8662 ± 0.0000
+Avg Precision:  0.9131 ± 0.0000
+FPR@95:         0.5000 ± 0.0000
+========================================
+
+========================================
+Dataset:        MVTecAD
+Inlier class:   carpet
+Embedding type: wide_resnet50_2
+AD model:       flocat-genagn
+Training time:  395.29 sec
+----------------------------------------
+AUC:            0.6705 ± 0.0000
+Avg Precision:  0.8534 ± 0.0000
+FPR@95:         0.4643 ± 0.0000
+========================================
+
+========================================
+Dataset:        MVTecAD
+Inlier class:   grid
+Embedding type: wide_resnet50_2
+AD model:       flocat-genagn
+Training time:  373.89 sec
+----------------------------------------
+AUC:            0.5522 ± 0.0000
+Avg Precision:  0.7874 ± 0.0000
+FPR@95:         0.9048 ± 0.0000
+========================================
+
+========================================
+Dataset:        MVTecAD
+Inlier class:   leather
+Embedding type: wide_resnet50_2
+AD model:       flocat-genagn
+Training time:  346.62 sec
+----------------------------------------
+AUC:            0.9586 ± 0.0000
+Avg Precision:  0.9857 ± 0.0000
+FPR@95:         0.2500 ± 0.0000
+========================================
+
+========================================
+Dataset:        MVTecAD
+Inlier class:   metal_nut
+Embedding type: wide_resnet50_2
+AD model:       flocat-genagn
+Training time:  298.84 sec
+----------------------------------------
+AUC:            0.8822 ± 0.0000
+Avg Precision:  0.9700 ± 0.0000
+FPR@95:         0.6364 ± 0.0000
+========================================
+
+========================================
+Dataset:        MVTecAD
+Inlier class:   hazelnut
+Embedding type: wide_resnet50_2
+AD model:       flocat-genagn
+Training time:  533.64 sec
+----------------------------------------
+AUC:            0.9900 ± 0.0000
+Avg Precision:  0.9943 ± 0.0000
+FPR@95:         0.0750 ± 0.0000
+========================================
+
+========================================
+Dataset:        MVTecAD
+Inlier class:   toothbrush
+Embedding type: wide_resnet50_2
+AD model:       flocat-genagn
+Training time:  81.55 sec
+----------------------------------------
+AUC:            0.9639 ± 0.0000
+Avg Precision:  0.9879 ± 0.0000
+FPR@95:         0.1667 ± 0.0000
+========================================
+
+========================================
+Dataset:        MVTecAD
+Inlier class:   tile
+Embedding type: wide_resnet50_2
+AD model:       flocat-genagn
+Training time:  313.44 sec
+----------------------------------------
+AUC:            0.9993 ± 0.0000
+Avg Precision:  0.9997 ± 0.0000
+FPR@95:         0.0000 ± 0.0000
+========================================
+
+========================================
+Dataset:        MVTecAD
+Inlier class:   pill
+Embedding type: wide_resnet50_2
+AD model:       flocat-genagn
+Training time:  376.38 sec
+----------------------------------------
+AUC:            0.8942 ± 0.0000
+Avg Precision:  0.9789 ± 0.0000
+FPR@95:         0.5000 ± 0.0000
+========================================
+
+========================================
+Dataset:        MVTecAD
+Inlier class:   screw
+Embedding type: wide_resnet50_2
+AD model:       flocat-genagn
+Training time:  443.63 sec
+----------------------------------------
+AUC:            0.8112 ± 0.0000
+Avg Precision:  0.9024 ± 0.0000
+FPR@95:         0.5610 ± 0.0000
+========================================
+
+========================================
+Dataset:        MVTecAD
+Inlier class:   transistor
+Embedding type: wide_resnet50_2
+AD model:       flocat-genagn
+Training time:  290.97 sec
+----------------------------------------
+AUC:            0.9163 ± 0.0000
+Avg Precision:  0.8786 ± 0.0000
+FPR@95:         0.2833 ± 0.0000
+========================================
+
+========================================
+Dataset:        MVTecAD
+Inlier class:   wood
+Embedding type: wide_resnet50_2
+AD model:       flocat-genagn
+Training time:  331.57 sec
+----------------------------------------
+AUC:            0.9351 ± 0.0000
+Avg Precision:  0.9804 ± 0.0000
+FPR@95:         0.4211 ± 0.0000
+========================================
+
+========================================
+Dataset:        MVTecAD
+Inlier class:   zipper
+Embedding type: wide_resnet50_2
+AD model:       flocat-genagn
+Training time:  316.36 sec
+----------------------------------------
+AUC:            0.9727 ± 0.0000
+Avg Precision:  0.9925 ± 0.0000
+FPR@95:         0.1562 ± 0.0000
+========================================
+
