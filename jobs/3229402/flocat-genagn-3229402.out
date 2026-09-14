@@ -7,3 +7,44 @@ tensor(1.2214, device='cuda:0', grad_fn=<ExpBackward0>)
 Epoch 101/300
 Train Loss: 0.1830, LR: 0.000669
 tensor(1.2214, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 201/300
+Train Loss: 0.0854, LR: 0.000750
+tensor(1.2213, device='cuda:0', grad_fn=<ExpBackward0>)
+AUC:        0.7277
+Avg Precision: 0.8928
+FPR@95:     0.7143
+AUC: 0.7277 | FPR@95: 0.7143 | AP: 0.8928 | time: 952.45s
+
+========================================
+Dataset:        MVTecAD
+Inlier class:   grid
+Embedding type: wide_resnet50_2
+AD model:       flocat-genagn
+Training time:  952.45 sec
+----------------------------------------
+AUC:            0.7277 ± 0.0000
+Avg Precision:  0.8928 ± 0.0000
+FPR@95:         0.7143 ± 0.0000
+========================================
+
+
+
+########################################
+   Comptabilité du calcul 3229402 
+########################################
+$ sacct --format='JobID,Partition,JobName,MaxRSS,MaxVMSize,NTasks,AllocCPUS,Start,End,Elapsed,AveCPU,MinCPU,NNodes,ExitCode,State' -j 3229402
+JobID           Partition  JobName        MaxRSS   MaxVMSize  NTasks  AllocCPUS  Start                End                  Elapsed   AveCPU  MinCPU  NNodes  ExitCode  State      
+-----           ---------  -------        -------  ---------  ------  ---------  -----                ---                  -------   ------  ------  ------  --------  -----      
+3229402         hpda_mig   flocat-genagn                              4          2026-09-14T16:23:49  2026-09-14T16:39:49  00:16:00                  1       0:0       COMPLETED  
+3229402.batch              batch                              1       4          2026-09-14T16:23:49  2026-09-14T16:39:49  00:16:00                  1       0:0       COMPLETED  
+3229402.extern             extern                             1       4          2026-09-14T16:23:49  2026-09-14T16:39:49  00:16:00                  1       0:0       COMPLETED  
+
+$ sacct --format='JobID,JobName,AllocCPUS,ReqTRES,AllocTRES,NNodes,NodeList,Elapsed,CPUTime' -j 3229402
+JobID           JobName        AllocCPUS  ReqTRES                                                              AllocTRES                                                             NNodes  NodeList  Elapsed   CPUTime   
+-----           -------        ---------  -------                                                              ---------                                                             ------  --------  -------   -------   
+3229402         flocat-genagn  4          billing=1,cpu=1,gres/gpu:a100_3g.40gb=1,gres/gpu=1,mem=3685M,node=1  billing=4,cpu=4,gres/gpu:a100_3g.40gb=1,gres/gpu=1,mem=14740M,node=1  1       c23hpda5  00:16:00  01:04:00  
+3229402.batch   batch          4                                                                               cpu=4,gres/gpu:a100_3g.40gb=1,gres/gpu=1,mem=14740M,node=1            1       c23hpda5  00:16:00  01:04:00  
+3229402.extern  extern         4                                                                               billing=4,cpu=4,gres/gpu:a100_3g.40gb=1,gres/gpu=1,mem=14740M,node=1  1       c23hpda5  00:16:00  01:04:00  
+
+Pour plus d'informations sur la comptabilité du calcul, merci de consulter la documentation http://www-tech.criann.fr ou le manuel 'man sacct'
