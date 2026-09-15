@@ -251,7 +251,7 @@ class flocatTrainer(nn.Module):
 
             self.centroid = mean_per_sample.mean(dim=0).to(self.device)   
             self.var = (var_per_sample.mean(dim=0) * self.config['coef_var']).to(self.device)
-        self.log_r = nn.Parameter(torch.tensor(0.2).to(self.device))
+        self.log_r = nn.Parameter(torch.tensor(0.0).to(self.device))
 
     @property
     def r_in(self):
