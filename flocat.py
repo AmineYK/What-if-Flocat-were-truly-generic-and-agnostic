@@ -238,8 +238,8 @@ class flocatTrainer(nn.Module):
             self.attentions_mask = self.config['attentions_mask']
 
         if self.source.dim() == 2:
-            self.centroid = self.source.mean(dim=0)        
-            self.var = self.source.var(dim=0).mean()
+            self.centroid = self.source.mean(dim=0).to(self.device)           
+            self.var = self.source.var(dim=0).mean() * self.config['coef_var']
         else:
             source_tokens = self.source
             mask = self.attentions_mask.unsqueeze(-1)  

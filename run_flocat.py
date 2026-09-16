@@ -60,7 +60,7 @@ def parse_args():
     parser.add_argument("--n_steps", type=int, default=10)
 
     # Répétitions / device / sortie
-    parser.add_argument("--n_runs", type=int, default=5,
+    parser.add_argument("--n_runs", type=int, default=3,
                          help="Nombre de runs pour calculer moyenne ± std.")
     parser.add_argument("--seed", type=int, default=None,
                          help="Seed initiale (incrémentée à chaque run). Si None: pas de seed fixée.")
@@ -90,13 +90,30 @@ def load_data(args):
 def run_once(args, X_train, X_test, y_test):
 
     device = args.device
-    num_patches = X_train.shape[1]
 
-    attentions_train_mask = torch.ones((X_train.shape[0], num_patches), dtype=torch.long)
-    attentions_test_mask = torch.ones((X_test.shape[0], num_patches), dtype=torch.long)
+    # ------------------------------------------------------------------
+    # Détection du format des embeddings :
+    #   - X_train.dim() == 3 -> [N, num_patches, C] (patch tokens, ResNet/ViT)
+    #       -> on construit un attention mask "plein" (tout à 1), puisqu'il
+    #          n'y a pas de padding (toutes les images produisent le même
+    #          nombre de patchs).
+    #   - X_train.dim() == 2 -> [N, C] (embedding CLS global par image)
+    #       -> pas de notion de "patchs" ici : on ne construit pas de mask,
+    #          on laisse flocat le gérer en interne (attentions_mask=None).
+    #          Idem pour trainer.test(), on ne passe pas de mask du tout,
+    #          il se met à None par défaut.
+    # ------------------------------------------------------------------
+    is_patch_embeddings = X_train.dim() == 3
+    latent_dim = X_train.shape[-1]
+    
+    if is_patch_embeddings:
+        num_patches = X_train.shape[1]
+        attentions_train_mask = torch.ones((X_train.shape[0], num_patches), dtype=torch.long)
+    else:
+        attentions_train_mask = None
 
     flocat_config = {
-        "latent_dim": X_train.shape[-1],
+        "latent_dim": latent_dim,
         "hidden_dim": args.hidden_dim,
         "depth": args.depth,
         "n_heads": args.n_heads,
@@ -128,10 +145,19 @@ def run_once(args, X_train, X_test, y_test):
     t1 = time.time()
     train_time = t1 - t0
 
-    auc, fpr, ap = trainer.test(
-        X_test, y_test, attentions_test_mask,
-        type=args.eval_type, n_steps=args.n_steps,
-    )
+    if is_patch_embeddings:
+        num_patches_test = X_test.shape[1]
+        attentions_test_mask = torch.ones((X_test.shape[0], num_patches_test), dtype=torch.long)
+        auc, fpr, ap = trainer.test(
+            X_test, y_test, attentions_test_mask,
+            type=args.eval_type, n_steps=args.n_steps,
+        )
+    else:
+        # Pas de mask passé -> flocat le gère en interne (défaut None)
+        auc, fpr, ap = trainer.test(
+            X_test, y_test,
+            type=args.eval_type, n_steps=args.n_steps,
+        )
 
     return {"auc": auc, "fpr95": fpr, "ap": ap, "train_time": train_time}
 
@@ -173,19 +199,25 @@ def main():
 
     X_train, X_test, y_test = load_data(args)
 
-    metrics = run_once(args, X_train, X_test, y_test)
-    print(
-        f"AUC: {metrics['auc']:.4f} | "
-        f"FPR@95: {metrics['fpr95']:.4f} | "
-        f"AP: {metrics['ap']:.4f} | "
-        f"time: {metrics['train_time']:.2f}s\n"
-    )
+    all_metrics = []
 
-    write_results(args, [metrics])
+    for n_run in range(args.n_runs):
+
+        print(f"--------- n_run {n_run+1} -----------------\n")
+
+        metrics = run_once(args, X_train, X_test, y_test)
+        print(
+            f"AUC: {metrics['auc']:.4f} | "
+            f"FPR@95: {metrics['fpr95']:.4f} | "
+            f"AP: {metrics['ap']:.4f} | "
+            f"time: {metrics['train_time']:.2f}s\n"
+        )
+
+        all_metrics.append(metrics)
+
+
+    write_results(args, all_metrics)
 
 
 if __name__ == "__main__":
     main()
-
-
-

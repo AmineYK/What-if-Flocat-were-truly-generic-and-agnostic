@@ -1,0 +1,90 @@
+Job ID: 3232650
+--------- n_run 1 -----------------
+
+
+Epoch 1/300
+Train Loss: 2.4992, LR: 0.000007
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 101/300
+Train Loss: 0.3777, LR: 0.000669
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 201/300
+Train Loss: 0.2816, LR: 0.000750
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+AUC:        0.8723
+Avg Precision: 0.9736
+FPR@95:     0.5385
+AUC: 0.8723 | FPR@95: 0.5385 | AP: 0.9736 | time: 104.95s
+
+--------- n_run 2 -----------------
+
+
+Epoch 1/300
+Train Loss: 2.4972, LR: 0.000007
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 101/300
+Train Loss: 0.3780, LR: 0.000669
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 201/300
+Train Loss: 0.2807, LR: 0.000750
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+AUC:        0.8827
+Avg Precision: 0.9748
+FPR@95:     0.4615
+AUC: 0.8827 | FPR@95: 0.4615 | AP: 0.9748 | time: 107.11s
+
+--------- n_run 3 -----------------
+
+
+Epoch 1/300
+Train Loss: 2.4954, LR: 0.000007
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 101/300
+Train Loss: 0.3845, LR: 0.000669
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 201/300
+Train Loss: 0.2861, LR: 0.000750
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+AUC:        0.8715
+Avg Precision: 0.9725
+FPR@95:     0.4231
+AUC: 0.8715 | FPR@95: 0.4231 | AP: 0.9725 | time: 116.04s
+
+========================================
+Dataset:        MVTecAD
+Inlier class:   pill
+Embedding type: vit_base_patch16_224
+AD model:       flocat-genagn
+Training time:  109.37 sec
+----------------------------------------
+AUC:            0.8755 ± 0.0051
+Avg Precision:  0.9736 ± 0.0009
+FPR@95:         0.4744 ± 0.0480
+========================================
+
+
+
+########################################
+   Comptabilité du calcul 3232650 
+########################################
+$ sacct --format='JobID,Partition,JobName,MaxRSS,MaxVMSize,NTasks,AllocCPUS,Start,End,Elapsed,AveCPU,MinCPU,NNodes,ExitCode,State' -j 3232650
+JobID             Partition  JobName        MaxRSS   MaxVMSize  NTasks  AllocCPUS  Start                End                  Elapsed   AveCPU  MinCPU  NNodes  ExitCode  State      
+-----             ---------  -------        -------  ---------  ------  ---------  -----                ---                  -------   ------  ------  ------  --------  -----      
+3232558_8         hpda_mig   flocat-genagn                              4          2026-09-16T17:32:55  2026-09-16T17:38:31  00:05:36                  1       0:0       COMPLETED  
+3232558_8.batch              batch                              1       4          2026-09-16T17:32:55  2026-09-16T17:38:31  00:05:36                  1       0:0       COMPLETED  
+3232558_8.extern             extern                             1       4          2026-09-16T17:32:55  2026-09-16T17:38:31  00:05:36                  1       0:0       COMPLETED  
+
+$ sacct --format='JobID,JobName,AllocCPUS,ReqTRES,AllocTRES,NNodes,NodeList,Elapsed,CPUTime' -j 3232650
+JobID             JobName        AllocCPUS  ReqTRES                                                              AllocTRES                                                             NNodes  NodeList  Elapsed   CPUTime   
+-----             -------        ---------  -------                                                              ---------                                                             ------  --------  -------   -------   
+3232558_8         flocat-genagn  4          billing=1,cpu=1,gres/gpu:a100_3g.40gb=1,gres/gpu=1,mem=3685M,node=1  billing=4,cpu=4,gres/gpu:a100_3g.40gb=1,gres/gpu=1,mem=14740M,node=1  1       c23hpda5  00:05:36  00:22:24  
+3232558_8.batch   batch          4                                                                               cpu=4,gres/gpu:a100_3g.40gb=1,gres/gpu=1,mem=14740M,node=1            1       c23hpda5  00:05:36  00:22:24  
+3232558_8.extern  extern         4                                                                               billing=4,cpu=4,gres/gpu:a100_3g.40gb=1,gres/gpu=1,mem=14740M,node=1  1       c23hpda5  00:05:36  00:22:24  
+
+Pour plus d'informations sur la comptabilité du calcul, merci de consulter la documentation http://www-tech.criann.fr ou le manuel 'man sacct'

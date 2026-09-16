@@ -1,0 +1,71 @@
+Job ID: 3232556
+--------- n_run 1 -----------------
+
+
+Epoch 1/300
+Train Loss: 2.2095, LR: 0.000007
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 101/300
+Train Loss: 0.1976, LR: 0.000669
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 201/300
+Train Loss: 0.1440, LR: 0.000750
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+AUC:        0.9693
+Avg Precision: 0.9920
+FPR@95:     0.1562
+AUC: 0.9693 | FPR@95: 0.1562 | AP: 0.9920 | time: 55.21s
+
+--------- n_run 2 -----------------
+
+
+Epoch 1/300
+Train Loss: 2.2095, LR: 0.000007
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 101/300
+Train Loss: 0.1895, LR: 0.000669
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 201/300
+Train Loss: 0.1406, LR: 0.000750
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+AUC:        0.9722
+Avg Precision: 0.9929
+FPR@95:     0.2500
+AUC: 0.9722 | FPR@95: 0.2500 | AP: 0.9929 | time: 55.18s
+
+--------- n_run 3 -----------------
+
+
+Epoch 1/300
+Train Loss: 2.2095, LR: 0.000007
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 101/300
+Train Loss: 0.1849, LR: 0.000669
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 201/300
+Train Loss: 0.1417, LR: 0.000750
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+AUC:        0.9638
+Avg Precision: 0.9904
+FPR@95:     0.2812
+AUC: 0.9638 | FPR@95: 0.2812 | AP: 0.9904 | time: 55.92s
+
+========================================
+Dataset:        MVTecAD
+Inlier class:   zipper
+Embedding type: vit_base_patch16_224
+AD model:       flocat-genagn
+Training time:  55.44 sec
+----------------------------------------
+AUC:            0.9684 ± 0.0035
+Avg Precision:  0.9917 ± 0.0010
+FPR@95:         0.2292 ± 0.0531
+========================================
+
+

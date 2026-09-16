@@ -1,0 +1,128 @@
+Job ID: 3232541
+--------- n_run 1 -----------------
+
+
+Epoch 1/300
+Train Loss: 1.7942, LR: 0.000007
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 101/300
+Train Loss: 0.1768, LR: 0.000669
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 201/300
+Train Loss: 0.1219, LR: 0.000750
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+AUC:        1.0000
+Avg Precision: 1.0000
+FPR@95:     0.0000
+AUC: 1.0000 | FPR@95: 0.0000 | AP: 1.0000 | time: 52.74s
+
+--------- n_run 2 -----------------
+
+
+Epoch 1/300
+Train Loss: 1.7081, LR: 0.000007
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 101/300
+Train Loss: 0.1763, LR: 0.000669
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 201/300
+Train Loss: 0.1261, LR: 0.000750
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+AUC:        1.0000
+Avg Precision: 1.0000
+FPR@95:     0.0000
+AUC: 1.0000 | FPR@95: 0.0000 | AP: 1.0000 | time: 51.83s
+
+--------- n_run 3 -----------------
+
+
+Epoch 1/300
+Train Loss: 1.7714, LR: 0.000007
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 101/300
+Train Loss: 0.1669, LR: 0.000669
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 201/300
+Train Loss: 0.1221, LR: 0.000750
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+AUC:        1.0000
+Avg Precision: 1.0000
+FPR@95:     0.0000
+AUC: 1.0000 | FPR@95: 0.0000 | AP: 1.0000 | time: 51.91s
+
+--------- n_run 4 -----------------
+
+
+Epoch 1/300
+Train Loss: 1.7079, LR: 0.000007
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 101/300
+Train Loss: 0.1603, LR: 0.000669
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 201/300
+Train Loss: 0.1231, LR: 0.000750
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+AUC:        1.0000
+Avg Precision: 1.0000
+FPR@95:     0.0000
+AUC: 1.0000 | FPR@95: 0.0000 | AP: 1.0000 | time: 51.89s
+
+--------- n_run 5 -----------------
+
+
+Epoch 1/300
+Train Loss: 1.7766, LR: 0.000007
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 101/300
+Train Loss: 0.1727, LR: 0.000669
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 201/300
+Train Loss: 0.1227, LR: 0.000750
+tensor(1., device='cuda:0', grad_fn=<ExpBackward0>)
+AUC:        1.0000
+Avg Precision: 1.0000
+FPR@95:     0.0000
+AUC: 1.0000 | FPR@95: 0.0000 | AP: 1.0000 | time: 51.75s
+
+========================================
+Dataset:        MVTecAD
+Inlier class:   bottle
+Embedding type: vit_base_patch16_224
+AD model:       flocat-genagn
+Training time:  52.03 sec
+----------------------------------------
+AUC:            1.0000 ± 0.0000
+Avg Precision:  1.0000 ± 0.0000
+FPR@95:         0.0000 ± 0.0000
+========================================
+
+
+
+########################################
+   Comptabilité du calcul 3232541 
+########################################
+$ sacct --format='JobID,Partition,JobName,MaxRSS,MaxVMSize,NTasks,AllocCPUS,Start,End,Elapsed,AveCPU,MinCPU,NNodes,ExitCode,State' -j 3232541
+JobID           Partition  JobName        MaxRSS   MaxVMSize  NTasks  AllocCPUS  Start                End                  Elapsed   AveCPU  MinCPU  NNodes  ExitCode  State      
+-----           ---------  -------        -------  ---------  ------  ---------  -----                ---                  -------   ------  ------  ------  --------  -----      
+3232541         hpda_mig   flocat-genagn                              4          2026-09-16T16:10:53  2026-09-16T16:15:18  00:04:25                  1       0:0       COMPLETED  
+3232541.batch              batch                              1       4          2026-09-16T16:10:53  2026-09-16T16:15:18  00:04:25                  1       0:0       COMPLETED  
+3232541.extern             extern                             1       4          2026-09-16T16:10:53  2026-09-16T16:15:18  00:04:25                  1       0:0       COMPLETED  
+
+$ sacct --format='JobID,JobName,AllocCPUS,ReqTRES,AllocTRES,NNodes,NodeList,Elapsed,CPUTime' -j 3232541
+JobID           JobName        AllocCPUS  ReqTRES                                                              AllocTRES                                                             NNodes  NodeList  Elapsed   CPUTime   
+-----           -------        ---------  -------                                                              ---------                                                             ------  --------  -------   -------   
+3232541         flocat-genagn  4          billing=1,cpu=1,gres/gpu:a100_3g.40gb=1,gres/gpu=1,mem=3685M,node=1  billing=4,cpu=4,gres/gpu:a100_3g.40gb=1,gres/gpu=1,mem=14740M,node=1  1       c23hpda5  00:04:25  00:17:40  
+3232541.batch   batch          4                                                                               cpu=4,gres/gpu:a100_3g.40gb=1,gres/gpu=1,mem=14740M,node=1            1       c23hpda5  00:04:25  00:17:40  
+3232541.extern  extern         4                                                                               billing=4,cpu=4,gres/gpu:a100_3g.40gb=1,gres/gpu=1,mem=14740M,node=1  1       c23hpda5  00:04:25  00:17:40  
+
+Pour plus d'informations sur la comptabilité du calcul, merci de consulter la documentation http://www-tech.criann.fr ou le manuel 'man sacct'

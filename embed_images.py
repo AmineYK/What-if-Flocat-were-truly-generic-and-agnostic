@@ -2,10 +2,14 @@
 extract_embeddings.py
 
 Script pour extraire des embeddings patch-level sur le dataset MVTec AD,
-avec deux backbones possibles :
+avec trois backbones/modes possibles :
     - ResNet/WideResNet (style PatchCore : layer2 + layer3)
-    - ViT (tokens de patchs avant la tête de classification, sans le/les
-      token(s) spéciaux [CLS] / registres)
+    - ViT (tokens de patchs internes du ViT, avant la tête, sans [CLS]/registres,
+      ou embedding CLS global de l'image via --is_cls)
+    - ViT avec patchs définis manuellement : on découpe nous-mêmes l'image en
+      patchs (sans overlap), chaque patch est passé indépendamment dans le ViT,
+      et on récupère le token [CLS] de chaque patch. La séquence de ces CLS
+      constitue l'embedding complet de l'image.
 
 Les embeddings sont sauvegardés sur disque (.pt) pour réutilisation ultérieure.
 
@@ -14,12 +18,21 @@ Usage:
     python extract_embeddings.py --model_type resnet --category bottle \
         --root data/mv_tec_ad --output data/embeddings
 
-    # Backbone ViT
+    # Backbone ViT — patch tokens natifs
     python extract_embeddings.py --model_type vit --vit_model_name vit_base_patch16_224 \
         --category bottle --root data/mv_tec_ad --output data/embeddings
 
+    # Backbone ViT — embedding CLS global
+    python extract_embeddings.py --model_type vit --is_cls \
+        --category bottle --root data/mv_tec_ad --output data/embeddings
+
+    # ViT avec patchs définis manuellement (CLS par patch)
+    python extract_embeddings.py --model_type vit_manual_patches \
+        --manual_patch_size 64 --vit_input_size 224 \
+        --category bottle --root data/mv_tec_ad --output data/embeddings
+
     # Toutes les catégories
-    python extract_embeddings.py --model_type vit --category all \
+    python extract_embeddings.py --model_type vit_manual_patches --category all \
         --root data/mv_tec_ad --output data/embeddings
 """
 
@@ -166,7 +179,7 @@ def build_resnet_backbone(model_name="wide_resnet50_2", out_indices=(2, 3), devi
 
 
 # ---------------------------------------------------------------------------
-# Extraction ViT — tokens de patchs (avant la tête, sans token(s) spéciaux)
+# Extraction ViT — tokens de patchs internes ou embedding CLS global
 # ---------------------------------------------------------------------------
 
 def build_vit_model(model_name="vit_base_patch16_224", image_size=256, device="cpu"):
@@ -180,36 +193,40 @@ def build_vit_model(model_name="vit_base_patch16_224", image_size=256, device="c
     ).to(device).eval()
     return model
 
+
 def build_vit_transform(model, image_size=256):
     config = resolve_data_config({}, model=model)
-    config['input_size'] = (3, image_size, image_size)
-
+    config["input_size"] = (3, image_size, image_size)
     return create_transform(**config)
 
 
-def extract_vit_patch_embeddings(model, images):
+def extract_vit_embeddings(model, images, is_cls=False):
     """
-    Récupère les tokens de patchs d'un ViT (timm), avant la tête de
-    classification, en retirant le(s) token(s) spéciaux ([CLS], et
-    éventuellement des registres selon l'architecture).
+    Extrait les embeddings d'un ViT (timm).
 
-    Retourne des embeddings de forme [B, H*W, C], compatible avec le
-    reste du pipeline (memory bank, coreset, etc.).
+    - is_cls=False : retourne les embeddings des patchs internes du ViT
+                     [B, H*W, C] + (B, H, W)
+    - is_cls=True  : retourne l'embedding CLS (résume l'image entière)
+                     [B, C]
     """
     with torch.no_grad():
-        print(images.shape)
-        x = model.patch_embed(images)          # [B, N_patches, C]
-        x = model._pos_embed(x)                # ajoute [CLS] (+ registres) + positional embedding
-        x = model.patch_drop(x)                # no-op en eval, présent selon versions timm
+        x = model.patch_embed(images)
+        x = model._pos_embed(x)
+        x = model.patch_drop(x)
         x = model.norm_pre(x)
 
         for block in model.blocks:
             x = block(x)
 
-        x = model.norm(x)                      # [B, num_prefix_tokens + N_patches, C]
+        x = model.norm(x)
 
     num_prefix_tokens = getattr(model, "num_prefix_tokens", 1)
-    patch_tokens = x[:, num_prefix_tokens:, :]  # retire [CLS] (+ registres) -> [B, N_patches, C]
+
+    if is_cls:
+        cls_embedding = x[:, 0, :]  # [B, C]
+        return cls_embedding
+
+    patch_tokens = x[:, num_prefix_tokens:, :]  # [B, N, C]
 
     B, N, C = patch_tokens.shape
     H = W = int(round(N ** 0.5))
@@ -223,24 +240,101 @@ def extract_vit_patch_embeddings(model, images):
 
 
 # ---------------------------------------------------------------------------
+# Extraction ViT avec patchs définis manuellement (CLS par patch)
+# ---------------------------------------------------------------------------
+
+def split_into_patches(images, patch_size):
+    """
+    Découpe un batch d'images [B, C, H, W] en patchs non chevauchants de
+    taille (patch_size x patch_size), via unfold (stride = patch_size).
+
+    Retourne un tenseur [B, num_patches, C, patch_size, patch_size] et
+    la grille spatiale (nH, nW) des patchs.
+    """
+    B, C, H, W = images.shape
+
+    if H % patch_size != 0 or W % patch_size != 0:
+        raise ValueError(
+            f"L'image ({H}x{W}) n'est pas divisible par manual_patch_size={patch_size}. "
+            f"Choisis un patch_size qui divise image_size, ou ajuste --image_size."
+        )
+
+    patches = images.unfold(2, patch_size, patch_size).unfold(3, patch_size, patch_size)
+    # patches: [B, C, nH, nW, patch_size, patch_size]
+    nH, nW = patches.shape[2], patches.shape[3]
+
+    patches = patches.contiguous().view(B, C, nH * nW, patch_size, patch_size)
+    patches = patches.permute(0, 2, 1, 3, 4)  # [B, num_patches, C, p, p]
+    return patches, (nH, nW)
+
+
+def extract_vit_manual_patch_embeddings(model, images, manual_patch_size=64,
+                                         vit_input_size=224):
+    """
+    1. Découpe chaque image en patchs non chevauchants de taille manual_patch_size.
+    2. Redimensionne chaque patch à vit_input_size (résolution attendue par le ViT),
+       si différente de manual_patch_size.
+    3. Fait un forward pass du ViT sur tous les patchs (de toutes les images du
+       batch, aplatis ensemble pour profiter du batching), et récupère le
+       token [CLS] de chaque patch.
+    4. Reforme la séquence de CLS par image : [B, num_patches, C].
+
+    Retourne (embeddings [B, num_patches, C], (B, nH, nW)), au même format
+    que les autres fonctions d'extraction patch-level du script.
+    """
+    B, C, H, W = images.shape
+
+    patches, (nH, nW) = split_into_patches(images, manual_patch_size)
+    num_patches = nH * nW
+
+    # Aplatit (batch, patch) ensemble pour un seul forward pass groupé
+    patches_flat = patches.reshape(B * num_patches, C, manual_patch_size, manual_patch_size)
+
+    if manual_patch_size != vit_input_size:
+        patches_flat = F.interpolate(
+            patches_flat, size=(vit_input_size, vit_input_size),
+            mode="bilinear", align_corners=False,
+        )
+
+    cls_flat = extract_vit_embeddings(model, patches_flat, is_cls=True)  # [B*num_patches, C_emb]
+
+    C_emb = cls_flat.shape[-1]
+    embeddings = cls_flat.reshape(B, num_patches, C_emb)  # [B, num_patches, C_emb]
+
+    return embeddings, (B, nH, nW)
+
+
+# ---------------------------------------------------------------------------
 # Pipeline d'extraction + sauvegarde pour un split complet (agnostique du modèle)
 # ---------------------------------------------------------------------------
 
 def extract_and_save(dataset, model, extract_fn, output_path, device="cpu",
                       batch_size=16, num_workers=4, **extract_kwargs):
     """
-    Parcourt tout le dataset, extrait les embeddings via extract_fn, et
-    sauvegarde tout (embeddings + métadonnées) dans un seul fichier .pt.
+    Parcourt tout le dataset, extrait les embeddings via extract_fn,
+    et sauvegarde tout dans un seul fichier .pt.
 
-    extract_fn doit avoir la signature : extract_fn(model, images, **kwargs)
-    et retourner (embeddings [B, H*W, C], (B, H, W)).
+    extract_fn doit avoir la signature :
+        extract_fn(model, images, **kwargs)
+
+    Deux formats de sortie sont supportés :
+
+    - is_cls=True (ViT, mode CLS global) :
+        embeddings [N, C]  +  grid_hw = None
+
+    - sinon (ResNet, ViT patch tokens, ou ViT patchs manuels) :
+        embeddings [N, num_patches, C]  +  grid_hw = (H, W)
     """
-    loader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+    loader = DataLoader(
+        dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers
+    )
 
     all_embeddings = []
     all_labels = []
     all_defect_types = []
     all_paths = []
+
+    is_cls = extract_kwargs.get("is_cls", False)
     grid_hw = None
 
     for batch in loader:
@@ -249,28 +343,37 @@ def extract_and_save(dataset, model, extract_fn, output_path, device="cpu",
         defect_types = batch["defect_type"]
         paths = batch["path"]
 
-        embeddings, (B, H, W) = extract_fn(model, images, **extract_kwargs)
-        grid_hw = (H, W)
+        if is_cls:
+            embeddings = extract_fn(model, images, **extract_kwargs)  # [B, C]
+        else:
+            embeddings, (B, H, W) = extract_fn(model, images, **extract_kwargs)  # [B, N, C]
+            grid_hw = (H, W)
 
         all_embeddings.append(embeddings.cpu())
         all_labels.extend(labels.tolist())
         all_defect_types.extend(defect_types)
         all_paths.extend(paths)
 
-    embeddings_tensor = torch.cat(all_embeddings, dim=0)  # [N_images, H*W, C]
+    embeddings_tensor = torch.cat(all_embeddings, dim=0)
 
     payload = {
-        "embeddings": embeddings_tensor,       # [N, H*W, C]
-        "labels": torch.tensor(all_labels),    # [N]
-        "defect_types": all_defect_types,      # list[str], longueur N
-        "paths": all_paths,                    # list[str], longueur N
-        "grid_hw": grid_hw,                    # (H, W) de la grille de patchs
+        "embeddings": embeddings_tensor,
+        "labels": torch.tensor(all_labels),
+        "defect_types": all_defect_types,
+        "paths": all_paths,
+        "grid_hw": grid_hw,
     }
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     torch.save(payload, output_path)
-    print(f"  -> {output_path}  ({embeddings_tensor.shape[0]} images, "
-          f"{embeddings_tensor.shape[1]} patches/image, {embeddings_tensor.shape[2]} dims)")
+
+    if is_cls:
+        print(f"  -> {output_path}  ({embeddings_tensor.shape[0]} images, "
+              f"{embeddings_tensor.shape[1]} dims, CLS)")
+    else:
+        print(f"  -> {output_path}  ({embeddings_tensor.shape[0]} images, "
+              f"{embeddings_tensor.shape[1]} patches/image, "
+              f"{embeddings_tensor.shape[2]} dims)")
 
 
 def load_embeddings(path):
@@ -279,7 +382,7 @@ def load_embeddings(path):
 
     Exemple :
         data = load_embeddings("data/embeddings/wide_resnet50_2/bottle/train.pt")
-        embeddings = data["embeddings"]      # [N, H*W, C]
+        embeddings = data["embeddings"]      # [N, H*W, C] ou [N, C] si CLS
         labels = data["labels"]              # [N]
         defect_types = data["defect_types"]  # list[str]
     """
@@ -305,8 +408,10 @@ def main():
     parser.add_argument("--output", type=str, default="data/embeddings",
                          help="Dossier de sortie pour les fichiers .pt")
 
-    parser.add_argument("--model_type", type=str, choices=["resnet", "vit"], default="resnet",
-                         help="Backbone à utiliser pour l'extraction")
+    parser.add_argument("--model_type", type=str,
+                         choices=["resnet", "vit", "vit_manual_patches"],
+                         default="resnet",
+                         help="Backbone/mode à utiliser pour l'extraction")
 
     # Arguments spécifiques ResNet
     parser.add_argument("--backbone", type=str, default="wide_resnet50_2",
@@ -316,10 +421,21 @@ def main():
     parser.add_argument("--patch_size", type=int, default=3,
                          help="[resnet] Taille du voisinage pour l'average pooling local")
 
-    # Arguments spécifiques ViT
+    # Arguments spécifiques ViT (patch tokens natifs ou CLS global)
     parser.add_argument("--vit_model_name", type=str, default="vit_base_patch16_224",
-                         help="[vit] Nom du modèle timm (ex: vit_base_patch16_224, "
-                              "vit_small_patch16_224, vit_base_patch14_dinov2.lvd142m)")
+                         help="[vit / vit_manual_patches] Nom du modèle timm (ex: "
+                              "vit_base_patch16_224, vit_small_patch16_224, "
+                              "vit_base_patch14_dinov2.lvd142m)")
+    parser.add_argument("--is_cls", action="store_true",
+                         help="[vit] Récupère l'embedding CLS global au lieu des patch tokens")
+
+    # Arguments spécifiques ViT avec patchs manuels
+    parser.add_argument("--manual_patch_size", type=int, default=64,
+                         help="[vit_manual_patches] Taille des patchs découpés manuellement "
+                              "dans l'image (doit diviser --image_size), sans overlap")
+    parser.add_argument("--vit_input_size", type=int, default=224,
+                         help="[vit_manual_patches] Résolution vers laquelle chaque patch "
+                              "manuel est redimensionné avant d'être passé au ViT")
 
     parser.add_argument("--image_size", type=int, default=256,
                          help="Taille d'image utilisée pour resnet et vit (le ViT interpole "
@@ -356,11 +472,42 @@ def main():
             image_size=args.image_size,
             device=args.device,
         )
-        extract_fn = extract_vit_patch_embeddings
-        extract_kwargs = {}
-        transform = build_vit_transform(model)
-        model_folder = args.vit_model_name
-        print(f"ViT model : {args.vit_model_name}, image_size={args.image_size}")
+        extract_fn = extract_vit_embeddings
+        extract_kwargs = {"is_cls": args.is_cls}
+        transform = build_vit_transform(model, image_size=args.image_size)
+        suffix = "cls" if args.is_cls else "patches"
+        model_folder = f"{args.vit_model_name}_{suffix}"
+        print(f"ViT model : {args.vit_model_name}, image_size={args.image_size}, "
+              f"mode={'CLS global' if args.is_cls else 'patch tokens natifs'}")
+
+    elif args.model_type == "vit_manual_patches":
+        # Le ViT est construit à la résolution des patchs manuels (vit_input_size),
+        # pas à la résolution de l'image entière : chaque patch lui est présenté
+        # séparément, redimensionné à cette taille.
+        model = build_vit_model(
+            model_name=args.vit_model_name,
+            image_size=args.vit_input_size,
+            device=args.device,
+        )
+        extract_fn = extract_vit_manual_patch_embeddings
+        extract_kwargs = {
+            "manual_patch_size": args.manual_patch_size,
+            "vit_input_size": args.vit_input_size,
+        }
+        # Le dataset garde des images à args.image_size ; c'est le découpage manuel
+        # (dans extract_vit_manual_patch_embeddings) qui produit les patchs, donc
+        # on utilise un transform simple resize+ToTensor (pas la normalisation ViT
+        # standard, car chaque patch sera de toute façon redimensionné puis passé
+        # au modèle -- on applique la normalisation ImageNet générique ici).
+        transform = T.Compose([
+            T.Resize((args.image_size, args.image_size)),
+            T.ToTensor(),
+            T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ])
+        model_folder = f"{args.vit_model_name}_manual_p{args.manual_patch_size}"
+        print(f"ViT model : {args.vit_model_name}, image_size={args.image_size}, "
+              f"manual_patch_size={args.manual_patch_size}, "
+              f"vit_input_size={args.vit_input_size} (CLS par patch, sans overlap)")
 
     else:
         raise ValueError(f"model_type inconnu : {args.model_type}")
@@ -369,12 +516,11 @@ def main():
 
     for category in categories:
         print(f"\n=== Catégorie : {category} ===")
-        print(args.image_size)
+
         train_dataset = MVTecAD(root=args.root, category=category, split="train",
                                  transform=transform, image_size=args.image_size)
         test_dataset = MVTecAD(root=args.root, category=category, split="test",
                                 transform=transform, image_size=args.image_size)
-        print(train_dataset[0]['image'].shape)
 
         print(f"Train : {len(train_dataset)} images | Test : {len(test_dataset)} images")
         defect_counts = Counter(s[2] for s in test_dataset.samples)
