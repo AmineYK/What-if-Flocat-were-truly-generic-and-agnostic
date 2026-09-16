@@ -42,9 +42,9 @@ def parse_args():
                          help="Nom du dataset pour le log (par défaut = embedding_type).")
 
     # Hyperparamètres du modèle
-    parser.add_argument("--hidden_dim", type=int, default=128)
-    parser.add_argument("--depth", type=int, default=4)
-    parser.add_argument("--n_heads", type=int, default=4)
+    parser.add_argument("--hidden_dim", type=int, default=64)
+    parser.add_argument("--depth", type=int, default=2)
+    parser.add_argument("--n_heads", type=int, default=2)
     parser.add_argument("--freq_embed_size", type=int, default=128)
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--weight_decay", type=float, default=1e-4)
