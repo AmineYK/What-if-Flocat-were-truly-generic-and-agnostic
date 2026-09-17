@@ -1,0 +1,90 @@
+Job ID: 3233892
+--------- n_run 1 -----------------
+
+
+Epoch 1/300
+Train Loss: 0.3296, LR: 0.000007
+tensor(1.0000, grad_fn=<ExpBackward0>)
+
+Epoch 101/300
+Train Loss: 0.0604, LR: 0.000669
+tensor(0.9543, grad_fn=<ExpBackward0>)
+
+Epoch 201/300
+Train Loss: 0.0401, LR: 0.000750
+tensor(0.8262, grad_fn=<ExpBackward0>)
+AUC:        0.8517
+Avg Precision: 0.8489
+FPR@95:     0.7167
+AUC: 0.8517 | FPR@95: 0.7167 | AP: 0.8489 | time: 84.05s
+
+--------- n_run 2 -----------------
+
+
+Epoch 1/300
+Train Loss: 0.3307, LR: 0.000007
+tensor(1.0000, grad_fn=<ExpBackward0>)
+
+Epoch 101/300
+Train Loss: 0.0593, LR: 0.000669
+tensor(0.9530, grad_fn=<ExpBackward0>)
+
+Epoch 201/300
+Train Loss: 0.0402, LR: 0.000750
+tensor(0.8251, grad_fn=<ExpBackward0>)
+AUC:        0.8513
+Avg Precision: 0.8422
+FPR@95:     0.8500
+AUC: 0.8513 | FPR@95: 0.8500 | AP: 0.8422 | time: 76.52s
+
+--------- n_run 3 -----------------
+
+
+Epoch 1/300
+Train Loss: 0.3307, LR: 0.000007
+tensor(1.0000, grad_fn=<ExpBackward0>)
+
+Epoch 101/300
+Train Loss: 0.0581, LR: 0.000669
+tensor(0.9528, grad_fn=<ExpBackward0>)
+
+Epoch 201/300
+Train Loss: 0.0412, LR: 0.000750
+tensor(0.8252, grad_fn=<ExpBackward0>)
+AUC:        0.8550
+Avg Precision: 0.8735
+FPR@95:     0.7500
+AUC: 0.8550 | FPR@95: 0.7500 | AP: 0.8735 | time: 76.60s
+
+========================================
+Dataset:        MVTecAD
+Inlier class:   transistor
+Embedding type: vit_base_patch16_224
+AD model:       flocat-genagn
+Training time:  79.05 sec
+----------------------------------------
+AUC:            0.8526 ± 0.0017
+Avg Precision:  0.8549 ± 0.0135
+FPR@95:         0.7722 ± 0.0567
+========================================
+
+
+
+########################################
+   Comptabilité du calcul 3233892 
+########################################
+$ sacct --format='JobID,Partition,JobName,MaxRSS,MaxVMSize,NTasks,AllocCPUS,Start,End,Elapsed,AveCPU,MinCPU,NNodes,ExitCode,State' -j 3233892
+JobID              Partition  JobName        MaxRSS   MaxVMSize  NTasks  AllocCPUS  Start                End                  Elapsed   AveCPU  MinCPU  NNodes  ExitCode  State      
+-----              ---------  -------        -------  ---------  ------  ---------  -----                ---                  -------   ------  ------  ------  --------  -----      
+3233879_12         hpda       flocat-genagn                              2          2026-09-17T10:02:14  2026-09-17T10:06:22  00:04:08                  1       0:0       COMPLETED  
+3233879_12.batch              batch                              1       2          2026-09-17T10:02:14  2026-09-17T10:06:22  00:04:08                  1       0:0       COMPLETED  
+3233879_12.extern             extern                             1       2          2026-09-17T10:02:14  2026-09-17T10:06:22  00:04:08                  1       0:0       COMPLETED  
+
+$ sacct --format='JobID,JobName,AllocCPUS,ReqTRES,AllocTRES,NNodes,NodeList,Elapsed,CPUTime' -j 3233892
+JobID              JobName        AllocCPUS  ReqTRES                           AllocTRES                         NNodes  NodeList  Elapsed   CPUTime   
+-----              -------        ---------  -------                           ---------                         ------  --------  -------   -------   
+3233879_12         flocat-genagn  2          billing=1,cpu=1,mem=3685M,node=1  billing=2,cpu=2,mem=7370M,node=1  1       c23hpda2  00:04:08  00:08:16  
+3233879_12.batch   batch          2                                            cpu=2,mem=7370M,node=1            1       c23hpda2  00:04:08  00:08:16  
+3233879_12.extern  extern         2                                            billing=2,cpu=2,mem=7370M,node=1  1       c23hpda2  00:04:08  00:08:16  
+
+Pour plus d'informations sur la comptabilité du calcul, merci de consulter la documentation http://www-tech.criann.fr ou le manuel 'man sacct'

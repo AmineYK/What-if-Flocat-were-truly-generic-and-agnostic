@@ -60,6 +60,7 @@ def parse_args():
     parser.add_argument("--n_steps", type=int, default=10)
 
     # Répétitions / device / sortie
+    parser.add_argument("--diy_patch_size", type=int, default=64)
     parser.add_argument("--n_runs", type=int, default=3,
                          help="Nombre de runs pour calculer moyenne ± std.")
     parser.add_argument("--seed", type=int, default=None,
@@ -76,6 +77,10 @@ def load_embeddings(path):
 
 def load_data(args):
     base = os.path.join(args.data_root, args.embedding_type, args.inlier_topic)
+
+    if args.data_root.split("/")[-1] == 'diypatch_level':
+        base = os.path.join(args.data_root, args.embedding_type+f"_manual_p{args.diy_patch_size}", args.inlier_topic)
+
 
     data_train = load_embeddings(os.path.join(base, "train.pt"))
     X_train = data_train["embeddings"]
