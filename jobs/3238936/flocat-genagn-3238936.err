@@ -1,0 +1,27 @@
+Unloading the cpe module is insufficient to restore the system defaults.
+Please run 'source
+/opt/cray/pe/cpe/24.07/restore_lmod_system_defaults.[csh|sh]'. 
+remove gcc/13.2 - cray-mpich/8.1.30 - milan - cpe 24.07
+load python3 3.12 for pytorch environment (with numpy 1.26.4, scikit-learn 1.5.2, torch 2.5.1, optuna 4.1.0, timm 1.0.11, transformers 4.46.2)
+load more details: pip list
+Traceback (most recent call last):
+  File "/soft/AIDL/conda_envs/pytorch251/lib/python3.12/site-packages/torch/serialization.py", line 850, in save
+    _save(
+  File "/soft/AIDL/conda_envs/pytorch251/lib/python3.12/site-packages/torch/serialization.py", line 1114, in _save
+    zip_file.write_record(name, storage, num_bytes)
+RuntimeError: [enforce fail at inline_container.cc:778] . PytorchStreamWriter failed writing file data/0: file write failed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/2017025/ayouce01/FLOCAT-GENAGN/What-if-Flocat-were-truly-generic-and-agnostic/embed_images.py", line 549, in <module>
+    main()
+  File "/home/2017025/ayouce01/FLOCAT-GENAGN/What-if-Flocat-were-truly-generic-and-agnostic/embed_images.py", line 530, in main
+    extract_and_save(
+  File "/home/2017025/ayouce01/FLOCAT-GENAGN/What-if-Flocat-were-truly-generic-and-agnostic/embed_images.py", line 368, in extract_and_save
+    torch.save(payload, output_path)
+  File "/soft/AIDL/conda_envs/pytorch251/lib/python3.12/site-packages/torch/serialization.py", line 849, in save
+    with _open_zipfile_writer(f) as opened_zipfile:
+  File "/soft/AIDL/conda_envs/pytorch251/lib/python3.12/site-packages/torch/serialization.py", line 690, in __exit__
+    self.file_like.write_end_of_file()
+RuntimeError: [enforce fail at inline_container.cc:603] . unexpected pos 42048 vs 41942

@@ -1,0 +1,39 @@
+Unloading the cpe module is insufficient to restore the system defaults.
+Please run 'source
+/opt/cray/pe/cpe/24.07/restore_lmod_system_defaults.[csh|sh]'. 
+remove gcc/13.2 - cray-mpich/8.1.30 - milan - cpe 24.07
+load python3 3.12 for pytorch environment (with numpy 1.26.4, scikit-learn 1.5.2, torch 2.5.1, optuna 4.1.0, timm 1.0.11, transformers 4.46.2)
+load more details: pip list
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Traceback (most recent call last):
+  File "/home/2017025/ayouce01/FLOCAT-GENAGN/What-if-Flocat-were-truly-generic-and-agnostic/embed_images.py", line 549, in <module>
+    main()
+  File "/home/2017025/ayouce01/FLOCAT-GENAGN/What-if-Flocat-were-truly-generic-and-agnostic/embed_images.py", line 530, in main
+    extract_and_save(
+  File "/home/2017025/ayouce01/FLOCAT-GENAGN/What-if-Flocat-were-truly-generic-and-agnostic/embed_images.py", line 340, in extract_and_save
+    for batch in loader:
+  File "/soft/AIDL/conda_envs/pytorch251/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 701, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "/soft/AIDL/conda_envs/pytorch251/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 1465, in _next_data
+    return self._process_data(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/soft/AIDL/conda_envs/pytorch251/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 1491, in _process_data
+    data.reraise()
+  File "/soft/AIDL/conda_envs/pytorch251/lib/python3.12/site-packages/torch/_utils.py", line 715, in reraise
+    raise exception
+PIL.UnidentifiedImageError: Caught UnidentifiedImageError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/soft/AIDL/conda_envs/pytorch251/lib/python3.12/site-packages/torch/utils/data/_utils/worker.py", line 351, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/soft/AIDL/conda_envs/pytorch251/lib/python3.12/site-packages/torch/utils/data/_utils/fetch.py", line 52, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+            ~~~~~~~~~~~~^^^^^
+  File "/home/2017025/ayouce01/FLOCAT-GENAGN/What-if-Flocat-were-truly-generic-and-agnostic/embed_images.py", line 117, in __getitem__
+    image = Image.open(img_path).convert("RGB")
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/soft/AIDL/conda_envs/pytorch251/lib/python3.12/site-packages/PIL/Image.py", line 3339, in open
+    raise UnidentifiedImageError(msg)
+PIL.UnidentifiedImageError: cannot identify image file '/home/2017025/ayouce01/FLOCAT-GENAGN/What-if-Flocat-were-truly-generic-and-agnostic/data/visa/macaroni1/train/good/0461.png'
+

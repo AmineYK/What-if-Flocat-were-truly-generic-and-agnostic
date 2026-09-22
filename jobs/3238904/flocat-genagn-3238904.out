@@ -1,0 +1,33 @@
+Job ID: 3238904
+Device : cuda
+Model type : vit
+ViT model : vit_base_patch16_224, image_size=256, mode=CLS global
+
+=== Catégorie : macaroni2 ===
+Train : 900 images | Test : 200 images
+Répartition test : {'bad': 100, 'good': 100}
+Extraction train...
+  -> data/embeddings/image_level/vit_base_patch16_224_cls/macaroni2/train.pt  (900 images, 768 dims, CLS)
+Extraction test...
+  -> data/embeddings/image_level/vit_base_patch16_224_cls/macaroni2/test.pt  (200 images, 768 dims, CLS)
+
+Terminé.
+
+########################################
+   Comptabilité du calcul 3238904 
+########################################
+$ sacct --format='JobID,Partition,JobName,MaxRSS,MaxVMSize,NTasks,AllocCPUS,Start,End,Elapsed,AveCPU,MinCPU,NNodes,ExitCode,State' -j 3238904
+JobID             Partition  JobName        MaxRSS   MaxVMSize  NTasks  AllocCPUS  Start                End                  Elapsed   AveCPU  MinCPU  NNodes  ExitCode  State      
+-----             ---------  -------        -------  ---------  ------  ---------  -----                ---                  -------   ------  ------  ------  --------  -----      
+3238877_6         hpda_mig   flocat-genagn                              4          2026-09-22T14:14:57  2026-09-22T14:15:29  00:00:32                  1       0:0       COMPLETED  
+3238877_6.batch              batch                              1       4          2026-09-22T14:14:57  2026-09-22T14:15:29  00:00:32                  1       0:0       COMPLETED  
+3238877_6.extern             extern                             1       4          2026-09-22T14:14:57  2026-09-22T14:15:29  00:00:32                  1       0:0       COMPLETED  
+
+$ sacct --format='JobID,JobName,AllocCPUS,ReqTRES,AllocTRES,NNodes,NodeList,Elapsed,CPUTime' -j 3238904
+JobID             JobName        AllocCPUS  ReqTRES                                                              AllocTRES                                                             NNodes  NodeList  Elapsed   CPUTime   
+-----             -------        ---------  -------                                                              ---------                                                             ------  --------  -------   -------   
+3238877_6         flocat-genagn  4          billing=1,cpu=1,gres/gpu:a100_3g.40gb=1,gres/gpu=1,mem=3685M,node=1  billing=4,cpu=4,gres/gpu:a100_3g.40gb=1,gres/gpu=1,mem=14740M,node=1  1       c23hpda5  00:00:32  00:02:08  
+3238877_6.batch   batch          4                                                                               cpu=4,gres/gpu:a100_3g.40gb=1,gres/gpu=1,mem=14740M,node=1            1       c23hpda5  00:00:32  00:02:08  
+3238877_6.extern  extern         4                                                                               billing=4,cpu=4,gres/gpu:a100_3g.40gb=1,gres/gpu=1,mem=14740M,node=1  1       c23hpda5  00:00:32  00:02:08  
+
+Pour plus d'informations sur la comptabilité du calcul, merci de consulter la documentation http://www-tech.criann.fr ou le manuel 'man sacct'

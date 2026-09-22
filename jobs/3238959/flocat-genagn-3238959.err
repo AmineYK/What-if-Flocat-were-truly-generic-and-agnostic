@@ -1,0 +1,13 @@
+Unloading the cpe module is insufficient to restore the system defaults.
+Please run 'source
+/opt/cray/pe/cpe/24.07/restore_lmod_system_defaults.[csh|sh]'. 
+remove gcc/13.2 - cray-mpich/8.1.30 - milan - cpe 24.07
+load python3 3.12 for pytorch environment (with numpy 1.26.4, scikit-learn 1.5.2, torch 2.5.1, optuna 4.1.0, timm 1.0.11, transformers 4.46.2)
+load more details: pip list
+/var/spool/slurmd/job3238959/slurm_script: line 25: echo: write error: Disk quota exceeded
+Traceback (most recent call last):
+  File "/home/2017025/ayouce01/FLOCAT-GENAGN/What-if-Flocat-were-truly-generic-and-agnostic/embed_images.py", line 549, in <module>
+    main()
+  File "/home/2017025/ayouce01/FLOCAT-GENAGN/What-if-Flocat-were-truly-generic-and-agnostic/embed_images.py", line 451, in main
+    print(f"Device : {args.device}")
+OSError: [Errno 122] Disk quota exceeded

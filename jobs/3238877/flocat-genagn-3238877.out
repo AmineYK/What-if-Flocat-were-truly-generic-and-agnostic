@@ -1,0 +1,14 @@
+Job ID: 3238877
+Device : cuda
+Model type : vit
+ViT model : vit_base_patch16_224, image_size=256, mode=CLS global
+
+=== Catégorie : pipe_fryum ===
+Train : 450 images | Test : 150 images
+Répartition test : {'bad': 100, 'good': 50}
+Extraction train...
+  -> data/embeddings/image_level/vit_base_patch16_224_cls/pipe_fryum/train.pt  (450 images, 768 dims, CLS)
+Extraction test...
+  -> data/embeddings/image_level/vit_base_patch16_224_cls/pipe_fryum/test.pt  (150 images, 768 dims, CLS)
+
+Terminé.
