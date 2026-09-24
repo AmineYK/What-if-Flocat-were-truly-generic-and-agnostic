@@ -20,7 +20,7 @@ import numpy as np
 
 import sys
 sys.path.append('./FLOCAT-GENAGN/What-if-Flocat-were-truly-generic-and-agnostic')
-from flocat import flocatTrainer, flocat
+from GENAGN.flocat import flocatTrainer, flocat
 
 
 # ----------------------------------------------------------------------

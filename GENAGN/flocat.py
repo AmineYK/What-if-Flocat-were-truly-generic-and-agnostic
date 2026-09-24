@@ -5,7 +5,7 @@ import torch.nn.functional as F
 from torch.optim import AdamW
 import numpy as np
 from torch.utils.data import TensorDataset, DataLoader
-import evaluation as ev
+import GENAGN.evaluation as ev
 
 
 class TimestepEmbedder(nn.Module):
